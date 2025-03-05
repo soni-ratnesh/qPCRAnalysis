@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  web:
+    build: .
+    container_name: excel_processor
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/uploads:/app/data/uploads
+      - ./output/processed:/app/output/processed
+    environment:
+      - UPLOAD_DIR=/app/data/uploads
+      - OUTPUT_DIR=/app/output/processed
