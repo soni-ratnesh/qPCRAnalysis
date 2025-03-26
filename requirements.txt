@@ -6,3 +6,4 @@ matplotlib
 python-multipart
 openpyxl
 xlrd
+seaborn
