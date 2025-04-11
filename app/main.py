@@ -19,8 +19,8 @@ app = FastAPI(title="Excel File Processor API", version="1.0.0")
 os.makedirs(Config.OUTPUT_DIR, exist_ok=True)
 os.makedirs(Config.UPLOAD_DIR, exist_ok=True)
 
-app.include_router(file_upload.router, prefix="/upload", tags=["File Upload"])
-app.include_router(download.router, prefix="/download", tags=["File Download"])
+# app.include_router(file_upload.router, prefix="/upload", tags=["File Upload"])
+# app.include_router(download.router, prefix="/download", tags=["File Download"])
 
 # Make sure this matches the folder where you placed index.html
 templates = Jinja2Templates(directory="app/templates")
