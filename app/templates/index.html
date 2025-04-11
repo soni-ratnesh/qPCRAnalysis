@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>qPCR Analysis Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f7fa;
+    }
+
+    h1 {
+      text-align: left;
+      padding: 20px;
+      margin: 0;
+      background: #2d3748;
+      color: white;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #2b6cb0;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2c5282;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>qPCR Analysis Portal</h1>
+
+  <div class="container">
+    <p><strong>Welcome!</strong> Use this form to upload your qPCR experiment data and provide relevant details.</p>
+    <p>Please make sure your file is in CSV format and contains the expected columns.</p>
+
+    <form action="/submit" method="post" enctype="multipart/form-data">
+
+        <label for="file">Upload CSV File:</label>
+        <input type="file" name="file" accept=".csv" required>
+      
+        <label for="experiment_name">Experiment Name:</label>
+        <input type="text" name="experiment_name" required>
+      
+        <label>
+          <input type="checkbox" id="has_control" name="has_control" checked>
+          Include Control Sample?
+        </label>
+        <div id="control_name_div">
+          <label for="control_name">Control Sample Name (caseSensitive):</label>
+          <input type="text" name="control_name" value="CONTROL">
+        </div>
+      
+
+        <div id="normalization_name_div">
+          <label for="normalization_name">GAPDH  Name (caseSensitive):</label>
+          <input type="text" name="normalization_name" value="GAPDH">
+        </div>
+      
+        <button type="submit">Submit</button>
+      </form>
+      
+  </div>
+  <script>
+    const controlCheckbox = document.getElementById("has_control");
+    const controlDiv = document.getElementById("control_name_div");
+  
+    const normCheckbox = document.getElementById("has_normalization");
+    const normDiv = document.getElementById("normalization_name_div");
+  
+    // Set visibility based on default checked status
+    controlDiv.style.display = controlCheckbox.checked ? "block" : "none";
+    normDiv.style.display = normCheckbox.checked ? "block" : "none";
+  
+    controlCheckbox.addEventListener("change", () => {
+      controlDiv.style.display = controlCheckbox.checked ? "block" : "none";
+    });
+  
+    normCheckbox.addEventListener("change", () => {
+      normDiv.style.display = normCheckbox.checked ? "block" : "none";
+    });
+  </script>
+  
+  
+
+</body>
+</html>
