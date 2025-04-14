@@ -77,8 +77,8 @@
 
     <form action="/submit" method="post" enctype="multipart/form-data">
 
-        <label for="file">Upload CSV File:</label>
-        <input type="file" name="file" accept=".csv" required>
+        <label for="file">Upload Excel File:</label>
+        <input type="file" name="file" accept=".xlsx,.xls,.ods" required>
       
         <label for="experiment_name">Experiment Name:</label>
         <input type="text" name="experiment_name" required>
@@ -94,7 +94,7 @@
       
 
         <div id="normalization_name_div">
-          <label for="normalization_name">GAPDH  Name (caseSensitive):</label>
+          <label for="normalization_name">Housekeeping Name (caseSensitive):</label>
           <input type="text" name="normalization_name" value="GAPDH">
         </div>
       
