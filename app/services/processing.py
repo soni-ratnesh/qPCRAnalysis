@@ -51,8 +51,8 @@ def process_excel_file(file_path: str,  control_name: str, normalization_name: s
         pivot_df_mean = pivot_df_mean.subtract(pivot_df_mean.loc[normalization_name,:], axis=1)
         pivot_df_sd = pivot_df_sd.subtract(pivot_df_sd.loc[normalization_name,:], axis=1)
         
-        del pivot_df_mean.loc[normalization_name,:]
-        del pivot_df_sd.loc[normalization_name,:]
+        pivot_df_mean.drop(normalization_name)
+        pivot_df_sd.drop(normalization_name)
     
         pivot_df_combined = combine_notebook(df_mean=pivot_df_mean, df_std=pivot_df_sd)
         pivot_df_combined.to_excel(writer, sheet_name='Delta Ct')
