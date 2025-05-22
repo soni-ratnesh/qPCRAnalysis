@@ -48,8 +48,8 @@ def process_excel_file(file_path: str,  control_name: str, normalization_name: s
         pivot_df_combined.to_excel(writer, sheet_name='Mean values')
 
         print(pivot_df_mean)
-        pivot_df_mean = pivot_df_mean.subtract(pivot_df_mean[normalization_name], axis=0)
-        pivot_df_sd = pivot_df_sd.subtract(pivot_df_sd[normalization_name], axis=0)
+        pivot_df_mean = pivot_df_mean.subtract(pivot_df_mean[normalization_name], axis=1)
+        pivot_df_sd = pivot_df_sd.subtract(pivot_df_sd[normalization_name], axis=1)
         
         del pivot_df_mean[normalization_name]
         del pivot_df_sd[normalization_name]
