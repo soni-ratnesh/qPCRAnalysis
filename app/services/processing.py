@@ -16,7 +16,6 @@ def combine_notebook(df_mean, df_std):
           .sort_index(axis=1, level=0)           # interleave: HLADR‑mean, HLADR‑std, …
     )
     return combined
-    
 def process_excel_file(file_path: str,  control_name: str, normalization_name: str, experiment_name:str, has_control:bool=True, has_normalization:bool=True ) -> (str, list[str]):
     try:
         dest_file = os.path.join(OUTPUT_DIR, f'{experiment_name}.xlsx')
@@ -35,14 +34,15 @@ def process_excel_file(file_path: str,  control_name: str, normalization_name: s
         well_data.columns = list(df.iloc[well_data_start_index])
     
         well_data = well_data.dropna(how='all').reset_index(drop=True)
-        well_data = well_data[~well_data['Ct SD'].isna()]
-        well_data = well_data[~well_data['Ct Mean'].isna()]
+        well_data_std = well_data[~well_data['Ct SD'].isna()]
+        well_data_mean = well_data[~well_data['Ct Mean'].isna()]
     
     
-        sample = well_data.groupby(['Target Name', 'Sample Name'])[['Ct Mean', 'Ct SD']].apply(lambda x : x.mean()).reset_index()
-    
-        pivot_df_sd = sample.pivot_table(index='Sample Name', columns='Target Name', values='Ct SD', aggfunc='first')
-        pivot_df_mean = sample.pivot_table(index='Sample Name', columns='Target Name', values='Ct Mean', aggfunc='first')
+        sample_mean = well_data_mean.groupby(['Target Name', 'Sample Name'])[['Ct Mean']].apply(lambda x : x.mean()).reset_index()
+        sample_std = well_data_std.groupby(['Target Name', 'Sample Name'])[['Ct SD']].apply(lambda x : x.mean()).reset_index()
+
+        pivot_df_sd = sample_std.pivot_table(index='Sample Name', columns='Target Name', values='Ct SD', aggfunc='first')
+        pivot_df_mean = sample_mean.pivot_table(index='Sample Name', columns='Target Name', values='Ct Mean', aggfunc='first')
         
         pivot_df_combined = combine_notebook(df_mean=pivot_df_mean, df_std=pivot_df_sd)
         pivot_df_combined.to_excel(writer, sheet_name='Mean values')
