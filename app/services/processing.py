@@ -64,10 +64,11 @@ def process_excel_file(file_path: str,  control_name: str, normalization_name: s
         pow2_combined.to_excel(writer, sheet_name='2^(-delta_ct)')
         
         if has_control:
-            norm_mean = pow2_mean.divide(pow2_mean[control_name])
-            norm_sd = pow2_sd.divide(pow2_sd[control_name])
+            norm_mean = pow2_mean.div(pow2_mean[control_name], axis=0)
+            norm_sd = pow2_sd.div(pow2_sd[control_name], axis=0)
 
             norm_combined = combine_notebook(df_mean=norm_mean, df_std=norm_sd)
+
             norm_combined.to_excel(writer, sheet_name='Normalized 2^(-delta_ct)')
     
     
