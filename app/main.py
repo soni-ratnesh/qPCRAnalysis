@@ -8,7 +8,6 @@ from fastapi import FastAPI, Request, Form, File, UploadFile, HTTPException
 import shutil
 from app.utils.file_handler import save_upload_file
 from app.core.config import Config
-from app.services.processing import process_excel_file
 from fastapi.responses import FileResponse
 
 
@@ -41,7 +40,32 @@ async def submit_form(
     normalization_name: str = Form(None),
     file: UploadFile = File(...)
 ):
-    
+    from app.services.processing import process_excel_file
+
+    file_path = save_upload_file(file, UPLOAD_DIR)
+    if not file_path:
+        raise HTTPException(status_code=500, detail="File upload failed")
+    output_file = process_excel_file(file_path, control_name, normalization_name,  experiment_name, has_control, has_normalization)
+
+
+    return FileResponse(output_file, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', filename=f'{experiment_name}.xlsx')
+@app.get("/v1", response_class=HTMLResponse)
+async def home(request: Request):  # <-- make sure 'request' is included here
+    return templates.TemplateResponse("v1/index.html", {"request": request})
+
+
+# Route for handling the form submission
+@app.post("/v1/submit")
+async def submit_form(
+    experiment_name: str = Form(...),
+    has_control: bool = Form(False),
+    control_name: str = Form(None),
+    has_normalization: bool = Form(False),
+    normalization_name: str = Form(None),
+    file: UploadFile = File(...)
+):
+    from app.services.v1.processing import process_excel_file
+
     file_path = save_upload_file(file, UPLOAD_DIR)
     if not file_path:
         raise HTTPException(status_code=500, detail="File upload failed")
