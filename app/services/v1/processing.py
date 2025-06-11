@@ -23,15 +23,17 @@ def process_excel_file(file_path: str,  control_name: str, normalization_name: s
     well_data.columns = list(df.iloc[well_data_start_index])
 
     well_data = well_data.dropna(how='all').reset_index(drop=True)
-    well_data = well_data[~well_data['Ct Mean'].isna()]
+    well_data['CT'] = pd.to_numeric(well_data['CT'], errors='coerce')
 
-    sample = well_data.groupby(['Target Name', 'Sample Name'])[['Ct Mean']].apply(lambda x : x.mean()).reset_index()
-    pivot_df = sample.pivot_table(index='Sample Name', columns='Target Name', values='Ct Mean', aggfunc='first')
+    well_data = well_data[~well_data['CT'].isna()]
+
+    sample = well_data.groupby(['Target Name', 'Sample Name'])[['CT']].apply(lambda x : x.mean()).reset_index()
+    pivot_df = sample.pivot_table(index='Sample Name', columns='Target Name', values='CT', aggfunc='first')
     pivot_df.to_excel(writer, sheet_name='Mean values')
 
     pivot_df = pivot_df.subtract(pivot_df[normalization_name], axis=0)
     del pivot_df[normalization_name]
-    pivot_df.to_excel(writer, sheet_name='Delta Ct')
+    pivot_df.to_excel(writer, sheet_name='Delta CT')
 
     pow2 = 2**(-pivot_df)
     pow2.to_excel(writer, sheet_name='2^(-delta_ct)')
